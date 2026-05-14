@@ -12,7 +12,7 @@ router = Router(tags=["Accounts"])
 @router.post("/", response={201: UserSchema})
 def create_user(request, data: UserCreateSchema):
     user = User(
-        username=data.username,
+        username=data.email.split('@')[0],
         email=data.email,
         first_name=data.first_name,
         last_name=data.last_name,

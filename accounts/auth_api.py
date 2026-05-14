@@ -6,14 +6,14 @@ from django.contrib.auth import get_user_model
 
 from .jwt_utils import create_access_token, create_refresh_token, decode_token
 from .schemas import UserSchema
-from .security import authenticate_username_or_email
+from .security import authenticate_by_email
 
 User = get_user_model()
 router = Router(tags=["Auth"])
 
 
 class LoginIn(Schema):
-    username: str = Field(..., min_length=1, description="Username or email")
+    email: str = Field(..., min_length=1, description="Email address")
     password: str = Field(..., min_length=1)
 
 
@@ -36,7 +36,7 @@ class RefreshTokenOut(Schema):
 
 @router.post("/login/", response={200: TokenPairOut, 401: dict})
 def login(request, data: LoginIn):
-    user = authenticate_username_or_email(data.username.strip(), data.password)
+    user = authenticate_by_email(data.email.strip(), data.password)
     if not user or not user.is_active:
         return 401, {"detail": "Invalid credentials"}
     return {

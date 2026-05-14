@@ -21,11 +21,8 @@ class JWTAuth(HttpBearer):
         return user
 
 
-def authenticate_username_or_email(username: str, password: str):
-    user = authenticate(username=username, password=password)
-    if user:
+def authenticate_by_email(email: str, password: str):
+    user = User.objects.filter(email__iexact=email).first()
+    if user and user.check_password(password):
         return user
-    u = User.objects.filter(email__iexact=username).first()
-    if u and u.check_password(password):
-        return u
     return None
