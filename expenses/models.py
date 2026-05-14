@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 class Currency(models.Model):
     currency_name = models.CharField(max_length=50, unique=True)
@@ -34,6 +35,7 @@ class Expense(models.Model):
     )
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='expenses')
+    expense_date = models.DateField(default=timezone.now)
     item_name = models.CharField(max_length=255)
     item_cost = models.DecimalField(max_digits=12, decimal_places=2)
     currency = models.ForeignKey(Currency, on_delete=models.RESTRICT, related_name='expenses')
